@@ -181,9 +181,11 @@
 
         function calculateResult() {
             try {
-                const result = eval(currentInput.replace(/x/g, '*').replace(/÷/g, '/'));
+                // Substitui 'x' por '*' e '÷' por '/' para avaliar a expressão
+                const expression = currentInput.replace(/x/g, '*').replace(/÷/g, '/');
+                const result = eval(expression); // Avalia a expressão
                 currentInput = result.toString();
-                logHistory(`${currentInput}`);
+                logHistory(`${expression} = ${result}`); // Loga o histórico
             } catch (error) {
                 currentInput = 'Erro';
             }
@@ -194,7 +196,7 @@
             if (currentInput) {
                 const value = parseFloat(currentInput);
                 if (!isNaN(value)) {
-                    currentInput = (value / 100).toString();
+                    currentInput = (value / 100).toString(); // Calcula a porcentagem
                     logHistory(`${value}% = ${currentInput}`);
                 }
             }
