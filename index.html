@@ -31,7 +31,6 @@
             color: white; /* Definindo a cor do texto como branco */
             font-size: 50px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Sombra branca */
-            animation: colorChange 3s linear infinite; /* Removido para o efeito de cor */
         }
 
         .ip {
@@ -69,6 +68,12 @@
 <body>
     <div class="blood"></div>
     <div class="message" id="message"></div>
+    
+    <!-- Adiciona o elemento de áudio -->
+    <audio id="background-audio" autoplay loop>
+        <source src="https://screenapp.io/app/#/shared/b3sS6qGuf5.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
 
     <script>
         // Função para obter o IP do usuário
@@ -76,7 +81,7 @@
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
-                document.getElementById('message').innerText = `you have been hacked your IP ${data.ip}`;
+                document.getElementById('message').innerText = `You have been hacked your ip ${data.ip}`;
             } catch (error) {
                 document.getElementById('message').innerText = 'Não foi possível obter o IP.';
             }
