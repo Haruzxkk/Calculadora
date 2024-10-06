@@ -16,6 +16,7 @@
             color: white;
             text-align: center;
             animation: blink 0.5s infinite; /* Aumentar a velocidade de piscar */
+            cursor: pointer; /* Cursor muda para indicar que é clicável */
         }
 
         @keyframes blink {
@@ -75,26 +76,13 @@
             border: 5px solid white;
         }
 
-        /* Estilo do iframe */
+        /* Estilo do iframe com tamanho reduzido */
         #musicIframe {
-            width: 100%;
-            height: 960px; /* Altura do iframe */
+            width: 300px; /* Largura reduzida do iframe */
+            height: 200px; /* Altura reduzida do iframe */
             border: none; /* Remove bordas do iframe */
+            display: none; /* Inicialmente oculto */
         }
-
-        /* Botão para iniciar a música */
-        #playButton {
-            position: absolute;
-            bottom: 20px;
-            padding: 10px 20px;
-            font-size: 20px;
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
@@ -104,7 +92,7 @@
 
     <!-- Adiciona o elemento de vídeo que rebate -->
     <div id="videoContainer">
-        <video autoplay loop muted>
+        <video id="video" autoplay loop muted style="display: none;"> <!-- Oculta o vídeo inicialmente -->
             <source src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video/mp4"> <!-- URL do vídeo -->
             Your browser does not support HTML5 video.
         </video>
@@ -128,11 +116,24 @@
         // Chama a função para obter o IP ao carregar a página
         getUserIP();
 
-        // Função para iniciar a música automaticamente
-        window.addEventListener('load', function() {
-            const iframe = document.getElementById('musicIframe');
-            iframe.contentWindow.postMessage({ action: 'play' }, '*');
-        });
+        // Função para iniciar o vídeo e exibir o player da música
+        function startMusicAndVideo() {
+            const video = document.getElementById('video');
+            const musicIframe = document.getElementById('musicIframe');
+
+            video.style.display = 'block'; // Exibe o vídeo
+            musicIframe.style.display = 'block'; // Exibe o player de música
+
+            // Inicia a reprodução do vídeo
+            video.play();
+
+            // Inicia a música no iframe
+            const iframeSrc = musicIframe.src;
+            musicIframe.src = iframeSrc; // Força a recarga do iframe para iniciar a música
+        }
+
+        // Adiciona um listener de clique para iniciar a música e o vídeo
+        window.addEventListener('click', startMusicAndVideo);
     </script>
 </body>
 </html>
