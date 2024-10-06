@@ -3,98 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Complexa</title>
+    <title>Calculadora Avançada</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
+            flex-direction: column;
         }
+
         .container {
             background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 320px;
+            transition: transform 0.3s;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
         }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
         #display {
             width: 100%;
-            height: 40px;
-            font-size: 24px;
+            height: 60px;
+            font-size: 32px;
             text-align: right;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: box-shadow 0.3s;
         }
+
+        #display:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(38, 150, 219, 0.7);
+        }
+
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
+            gap: 10px;
         }
+
         button {
-            padding: 10px;
-            font-size: 18px;
+            padding: 15px;
+            font-size: 24px;
             border: none;
-            background-color: #007BFF;
+            border-radius: 10px;
+            background-color: #007bff;
             color: white;
-            border-radius: 5px;
             cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
         }
+
         button:hover {
             background-color: #0056b3;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         #history {
-            margin-top: 10px;
-            max-height: 150px;
+            margin-top: 20px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 5px;
-            border-radius: 5px;
+            border-radius: 10px;
             background-color: #f9f9f9;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #history div {
+            margin: 5px 0;
+            color: #555;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        #history div:hover {
+            color: #007bff;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            #display {
+                font-size: 28px;
+            }
+
+            button {
+                font-size: 22px;
+            }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora Complexa</h1>
+        <h1>Calculadora Avançada</h1>
         <input type="text" id="display" disabled>
         <div class="buttons">
             <button onclick="clearDisplay()">C</button>
-            <button onclick="appendToDisplay('(')">(</button>
-            <button onclick="appendToDisplay(')')">)</button>
-            <button onclick="appendToDisplay('/')">/</button>
             <button onclick="appendToDisplay('7')">7</button>
             <button onclick="appendToDisplay('8')">8</button>
             <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('x')">x</button>
+            <button onclick="appendToDisplay('/')">/</button>
             <button onclick="appendToDisplay('4')">4</button>
             <button onclick="appendToDisplay('5')">5</button>
             <button onclick="appendToDisplay('6')">6</button>
-            <button onclick="appendToDisplay('-')">-</button>
+            <button onclick="appendToDisplay('x')">x</button>
             <button onclick="appendToDisplay('1')">1</button>
             <button onclick="appendToDisplay('2')">2</button>
             <button onclick="appendToDisplay('3')">3</button>
-            <button onclick="appendToDisplay('+')">+</button>
+            <button onclick="appendToDisplay('-')">-</button>
             <button onclick="appendToDisplay('0')">0</button>
             <button onclick="calculateResult()">=</button>
-            <button onclick="appendToDisplay('Math.sqrt(')">√</button>
-            <button onclick="appendToDisplay('Math.sin(')">sin</button>
-            <button onclick="appendToDisplay('Math.cos(')">cos</button>
-            <button onclick="appendToDisplay('Math.tan(')">tan</button>
-            <button onclick="appendToDisplay('Math.log(')">log</button>
-            <button onclick="appendToDisplay('Math.exp(')">exp</button>
-            <button onclick="appendToDisplay('factorial(')">n!</button>
-            <button onclick="appendToDisplay('Math.PI')">π</button>
-            <button onclick="appendToDisplay('Math.pow(')">x^y</button>
+            <button onclick="appendToDisplay('+')">+</button>
         </div>
         <div id="history"></div>
     </div>
+    <footer>
+        InnoBotCorporation - Todos os direitos reservados 2023-2024
+    </footer>
 
     <script>
         function appendToDisplay(value) {
@@ -105,37 +171,25 @@
             document.getElementById('display').value = '';
         }
 
-        function factorial(n) {
-            if (n < 0) return undefined; // não existe fatorial de números negativos
-            return (n <= 1) ? 1 : n * factorial(n - 1);
-        }
-
         function calculateResult() {
             const display = document.getElementById('display');
             try {
-                let expression = display.value;
-
-                // Substitui a função fatorial na string para processamento
-                expression = expression.replace(/factorial(\d+)/g, (match, p1) => factorial(parseInt(p1)));
-
-                // Substitui 'x' por '*' para que o math.js reconheça a multiplicação
-                expression = expression.replace(/x/g, '*');
-
-                // Calcule o resultado usando math.js para maior precisão
-                const result = math.evaluate(expression);
-                
+                // Substitui 'x' por '*' antes de avaliar
+                const result = eval(display.value.replace(/x/g, '*'));
                 display.value = result;
-                logHistory(expression, result);
+                logHistory(display.value);
             } catch (error) {
                 display.value = 'Erro';
             }
         }
 
-        function logHistory(expression, result) {
+        function logHistory(expression) {
             const historyDiv = document.getElementById('history');
             const entry = document.createElement('div');
-            entry.textContent = `${expression} = ${result}`;
+            entry.textContent = expression;
             historyDiv.appendChild(entry);
+            // Rolagem automática para o fundo
+            historyDiv.scrollTop = historyDiv.scrollHeight;
         }
     </script>
 </body>
