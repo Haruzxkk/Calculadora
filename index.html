@@ -181,9 +181,9 @@
 
         function calculateResult() {
             try {
-                const result = evaluateExpression(currentInput.replace(/x/g, '*').replace(/÷/g, '/'));
+                const result = eval(currentInput.replace(/x/g, '*').replace(/÷/g, '/'));
                 currentInput = result.toString();
-                logHistory(currentInput);
+                logHistory(`${currentInput}`);
             } catch (error) {
                 currentInput = 'Erro';
             }
@@ -199,63 +199,6 @@
                 }
             }
             updateDisplay();
-        }
-
-        function evaluateExpression(expr) {
-            // Avalia expressões matemáticas com suporte a operações básicas
-            const operators = {
-                '+': (a, b) => a + b,
-                '-': (a, b) => a - b,
-                '*': (a, b) => a * b,
-                '/': (a, b) => a / b
-            };
-
-            // Converte a string em uma expressão usando o método de Shunting Yard
-            const outputQueue = [];
-            const operatorStack = [];
-            const tokens = expr.match(/(\d+\.?\d*|[+\-x÷])/g);
-
-            for (let token of tokens) {
-                if (!isNaN(token)) {
-                    outputQueue.push(parseFloat(token));
-                } else if (operators[token]) {
-                    while (operatorStack.length && precedence(operatorStack[operatorStack.length - 1]) >= precedence(token)) {
-                        outputQueue.push(operatorStack.pop());
-                    }
-                    operatorStack.push(token);
-                }
-            }
-
-            while (operatorStack.length) {
-                outputQueue.push(operatorStack.pop());
-            }
-
-            // Calcula o resultado da expressão em notação pós-fixada
-            const resultStack = [];
-            for (let token of outputQueue) {
-                if (typeof token === 'number') {
-                    resultStack.push(token);
-                } else if (operators[token]) {
-                    const b = resultStack.pop();
-                    const a = resultStack.pop();
-                    resultStack.push(operators[token](a, b));
-                }
-            }
-
-            return resultStack[0];
-        }
-
-        function precedence(op) {
-            switch (op) {
-                case '+':
-                case '-':
-                    return 1;
-                case 'x':
-                case '÷':
-                    return 2;
-                default:
-                    return 0;
-            }
         }
 
         function logHistory(expression) {
