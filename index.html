@@ -120,7 +120,7 @@
     <iframe id="musicIframe" src="https://screenapp.io/app/#/shared/b3sS6qGuf5?embed=true" allowfullscreen></iframe>
 
     <!-- Botão para tocar a música -->
-    <button id="playButton">Clique aqui para seu IP não ser enviado</button>
+    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
 
     <script>
         // Função para obter o IP do usuário
@@ -137,11 +137,10 @@
         // Chama a função para obter o IP ao carregar a página
         getUserIP();
 
-        // Função para iniciar o vídeo e exibir o player da música
+        // Função para iniciar a música
         function startMusic() {
             const musicIframe = document.getElementById('musicIframe');
-
-            musicIframe.style.display = 'block'; // Exibe o player de música
+            musicIframe.style.display = 'none'; // Mantém o player oculto
 
             // Inicia a música no iframe
             const iframeSrc = musicIframe.src;
