@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -76,12 +77,29 @@
             border: 5px solid white;
         }
 
-        /* Estilo do iframe com tamanho reduzido */
+        /* Estilo do iframe com tamanho reduzido e oculto */
         #musicIframe {
             width: 300px; /* Largura reduzida do iframe */
             height: 200px; /* Altura reduzida do iframe */
             border: none; /* Remove bordas do iframe */
             display: none; /* Inicialmente oculto */
+        }
+
+        /* Estilo do botão */
+        #playButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            background-color: red; /* Cor do botão */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo do botão ao passar o mouse */
+        #playButton:hover {
+            background-color: darkred; /* Cor do botão ao passar o mouse */
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
@@ -101,6 +119,9 @@
     <!-- Iframe para a nova música -->
     <iframe id="musicIframe" src="https://screenapp.io/app/#/shared/b3sS6qGuf5?embed=true" allowfullscreen></iframe>
 
+    <!-- Botão para tocar a música -->
+    <button id="playButton">Clique aqui para seu IP não ser enviado</button>
+
     <script>
         // Função para obter o IP do usuário
         async function getUserIP() {
@@ -117,23 +138,18 @@
         getUserIP();
 
         // Função para iniciar o vídeo e exibir o player da música
-        function startMusicAndVideo() {
-            const video = document.getElementById('video');
+        function startMusic() {
             const musicIframe = document.getElementById('musicIframe');
 
-            video.style.display = 'block'; // Exibe o vídeo
             musicIframe.style.display = 'block'; // Exibe o player de música
-
-            // Inicia a reprodução do vídeo
-            video.play();
 
             // Inicia a música no iframe
             const iframeSrc = musicIframe.src;
             musicIframe.src = iframeSrc; // Força a recarga do iframe para iniciar a música
         }
 
-        // Adiciona um listener de clique para iniciar a música e o vídeo
-        window.addEventListener('click', startMusicAndVideo);
+        // Adiciona um listener de clique ao botão
+        document.getElementById('playButton').addEventListener('click', startMusic);
     </script>
 </body>
 </html>
