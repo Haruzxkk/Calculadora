@@ -16,8 +16,6 @@
             color: white;
             text-align: center;
             animation: blink 0.5s infinite; /* Aumentar a velocidade de piscar */
-            max-width: 600px; /* Definindo largura mais estreita para o site */
-            margin: 0 auto;
         }
 
         @keyframes blink {
@@ -76,15 +74,6 @@
             height: 100%;
             border: 5px solid white;
         }
-
-        /* Estilo para o iframe do player de música */
-        iframe {
-            width: 400px; /* Diminuir o tamanho do player */
-            height: 150px; /* Ajustar a altura */
-            border: 2px solid white; /* Adicionar borda branca */
-            margin-top: 20px;
-        }
-
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
@@ -95,13 +84,16 @@
     <!-- Adiciona o elemento de vídeo que rebate -->
     <div id="videoContainer">
         <video autoplay loop muted>
-            <source src="https://www.urupson.com/youareanidiot.mp4" type="video/mp4">
+            <source src="https://www.youtube.com/watch?v=Yg1H2Qj_0sI" type="video/mp4">
             Your browser does not support HTML5 video.
         </video>
     </div>
 
-    <!-- Iframe do player de música ajustado e iniciado automaticamente -->
-    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen></iframe>
+    <!-- Adiciona o elemento de áudio (inicia ao clicar em qualquer lugar) -->
+    <audio id="background-audio" loop>
+        <source src="https://screenapp.io/app/#/shared/b3sS6qGuf5" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
 
     <script>
         // Função para obter o IP do usuário
@@ -117,6 +109,14 @@
 
         // Chama a função para obter o IP ao carregar a página
         getUserIP();
+
+        // Função para iniciar a música ao clicar em qualquer lugar do site
+        document.body.addEventListener('click', function() {
+            const audio = document.getElementById('background-audio');
+            if (audio.paused) {
+                audio.play();
+            }
+        });
 
         // Função para mover o vídeo que rebate nas paredes
         const videoContainer = document.getElementById('videoContainer');
