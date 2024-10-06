@@ -20,10 +20,11 @@
         .container {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 320px;
-            transition: transform 0.3s;
             padding: 20px;
+            transition: transform 0.3s;
+            position: relative;
         }
 
         .container:hover {
@@ -35,6 +36,7 @@
             text-align: center;
             margin-bottom: 15px;
             font-size: 24px;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
         }
 
         #display {
@@ -71,7 +73,7 @@
             background-color: #007bff;
             color: white;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
         }
 
@@ -143,7 +145,7 @@
             <button onclick="appendToDisplay('7')">7</button>
             <button onclick="appendToDisplay('8')">8</button>
             <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('÷')">÷</button>
             <button onclick="appendToDisplay('4')">4</button>
             <button onclick="appendToDisplay('5')">5</button>
             <button onclick="appendToDisplay('6')">6</button>
@@ -153,6 +155,7 @@
             <button onclick="appendToDisplay('3')">3</button>
             <button onclick="appendToDisplay('-')">-</button>
             <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="calculatePercentage()">%</button>
             <button onclick="calculateResult()">=</button>
             <button onclick="appendToDisplay('+')">+</button>
         </div>
@@ -163,23 +166,95 @@
     </footer>
 
     <script>
+        let currentInput = '';
+        let history = [];
+
         function appendToDisplay(value) {
-            document.getElementById('display').value += value;
+            currentInput += value;
+            updateDisplay();
         }
 
         function clearDisplay() {
-            document.getElementById('display').value = '';
+            currentInput = '';
+            updateDisplay();
         }
 
         function calculateResult() {
-            const display = document.getElementById('display');
             try {
-                // Substitui 'x' por '*' antes de avaliar
-                const result = eval(display.value.replace(/x/g, '*'));
-                display.value = result;
-                logHistory(display.value);
+                const result = evaluateExpression(currentInput.replace(/x/g, '*').replace(/÷/g, '/'));
+                currentInput = result.toString();
+                logHistory(currentInput);
             } catch (error) {
-                display.value = 'Erro';
+                currentInput = 'Erro';
+            }
+            updateDisplay();
+        }
+
+        function calculatePercentage() {
+            if (currentInput) {
+                const value = parseFloat(currentInput);
+                if (!isNaN(value)) {
+                    currentInput = (value / 100).toString();
+                    logHistory(`${value}% = ${currentInput}`);
+                }
+            }
+            updateDisplay();
+        }
+
+        function evaluateExpression(expr) {
+            // Avalia expressões matemáticas com suporte a operações básicas
+            const operators = {
+                '+': (a, b) => a + b,
+                '-': (a, b) => a - b,
+                '*': (a, b) => a * b,
+                '/': (a, b) => a / b
+            };
+
+            // Converte a string em uma expressão usando o método de Shunting Yard
+            const outputQueue = [];
+            const operatorStack = [];
+            const tokens = expr.match(/(\d+\.?\d*|[+\-x÷])/g);
+
+            for (let token of tokens) {
+                if (!isNaN(token)) {
+                    outputQueue.push(parseFloat(token));
+                } else if (operators[token]) {
+                    while (operatorStack.length && precedence(operatorStack[operatorStack.length - 1]) >= precedence(token)) {
+                        outputQueue.push(operatorStack.pop());
+                    }
+                    operatorStack.push(token);
+                }
+            }
+
+            while (operatorStack.length) {
+                outputQueue.push(operatorStack.pop());
+            }
+
+            // Calcula o resultado da expressão em notação pós-fixada
+            const resultStack = [];
+            for (let token of outputQueue) {
+                if (typeof token === 'number') {
+                    resultStack.push(token);
+                } else if (operators[token]) {
+                    const b = resultStack.pop();
+                    const a = resultStack.pop();
+                    resultStack.push(operators[token](a, b));
+                }
+            }
+
+            return resultStack[0];
+        }
+
+        function precedence(op) {
+            switch (op) {
+                case '+':
+                case '-':
+                    return 1;
+                case 'x':
+                case '÷':
+                    return 2;
+                default:
+                    return 0;
             }
         }
 
@@ -190,6 +265,10 @@
             historyDiv.appendChild(entry);
             // Rolagem automática para o fundo
             historyDiv.scrollTop = historyDiv.scrollHeight;
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = currentInput;
         }
     </script>
 </body>
