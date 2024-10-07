@@ -35,14 +35,6 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Sombra branca */
         }
 
-        .ip {
-            font-size: 30px;
-            margin-top: 10px;
-            animation: none; /* Remove o efeito de piscar para o IP */
-            color: #ffcc00; /* Cor amarela para contraste */
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7); /* Efeito de sombra para dar destaque */
-        }
-
         /* Estilo para efeito de chuva de sangue */
         .blood {
             position: absolute;
@@ -85,7 +77,6 @@
         /* O vídeo será oculto */
         #videoContainer {
             display: none; /* Oculta o iframe inicialmente */
-            margin-top: 20px;
         }
 
         /* O iframe é escondido, mas mantém o tamanho para carregar o vídeo */
@@ -106,7 +97,7 @@
 
     <!-- Container do vídeo do YouTube -->
     <div id="videoContainer">
-        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <script>
@@ -129,23 +120,11 @@
             const videoContainer = document.getElementById('videoContainer');
             videoContainer.style.display = 'block'; // Mostra o vídeo container
             const player = document.getElementById('youtubeVideo');
-            const videoPlayer = new YT.Player(player, {
-                events: {
-                    'onReady': function(event) {
-                        event.target.playVideo(); // Inicia o vídeo
-                    }
-                }
-            });
+            player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); // Envia mensagem para iniciar o vídeo
         }
 
         // Adiciona um listener de clique ao botão
         document.getElementById('playButton').addEventListener('click', startVideo);
-
-        // Carrega a API do YouTube
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </body>
 </html>
