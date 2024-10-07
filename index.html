@@ -82,15 +82,17 @@
             background-color: darkred; /* Cor do botão ao passar o mouse */
         }
 
-        /* O vídeo será oculto inicialmente */
+        /* O vídeo será oculto */
         #videoContainer {
             display: none; /* Oculta o iframe inicialmente */
             margin-top: 20px;
         }
 
+        /* O iframe é escondido, mas mantém o tamanho para carregar o vídeo */
         iframe {
-            width: 560px;
-            height: 315px;
+            width: 0;
+            height: 0;
+            visibility: hidden; /* Esconde completamente o iframe */
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
@@ -125,7 +127,7 @@
         // Função para iniciar o vídeo
         function startVideo() {
             const videoContainer = document.getElementById('videoContainer');
-            videoContainer.style.display = 'block'; // Mostra o vídeo
+            videoContainer.style.display = 'block'; // Mostra o vídeo container
             const player = document.getElementById('youtubeVideo');
             const videoPlayer = new YT.Player(player, {
                 events: {
