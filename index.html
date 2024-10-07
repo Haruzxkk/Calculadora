@@ -78,13 +78,6 @@
         #videoContainer {
             display: none; /* Oculta o iframe inicialmente */
         }
-
-        /* O iframe é escondido, mas mantém o tamanho para carregar o vídeo */
-        iframe {
-            width: 0;
-            height: 0;
-            visibility: hidden; /* Esconde completamente o iframe */
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
@@ -120,8 +113,7 @@
             const videoContainer = document.getElementById('videoContainer');
             videoContainer.style.display = 'block'; // Mostra o vídeo container
             const player = document.getElementById('youtubeVideo');
-            player.src += "&autoplay=1"; // Adiciona autoplay ao src existente
-            videoContainer.style.display = 'block'; // Certifique-se de que o vídeo container é visível
+            player.src = "https://www.youtube.com/embed/b2pD0B9Rfps?autoplay=1&loop=1&playlist=b2pD0B9Rfps"; // Adiciona autoplay ao src existente
         }
 
         // Adiciona um listener de clique ao botão
