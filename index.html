@@ -65,26 +65,6 @@
             }
         }
 
-        /* Estilos para o vídeo que rebate */
-        #videoContainer {
-            position: absolute;
-            width: 200px;
-            height: 150px;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            border: 5px solid white;
-        }
-
-        /* Estilo do iframe com tamanho reduzido e oculto */
-        #musicIframe {
-            width: 300px; /* Largura reduzida do iframe */
-            height: 200px; /* Altura reduzida do iframe */
-            border: none; /* Remove bordas do iframe */
-            display: none; /* Inicialmente oculto */
-        }
-
         /* Estilo do botão */
         #playButton {
             margin-top: 20px;
@@ -101,6 +81,11 @@
         #playButton:hover {
             background-color: darkred; /* Cor do botão ao passar o mouse */
         }
+
+        /* O áudio será oculto */
+        #audioPlayer {
+            display: none; /* Oculta o player de áudio */
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
@@ -108,19 +93,11 @@
     <div class="blood"></div>
     <div class="message" id="message"></div>
 
-    <!-- Adiciona o elemento de vídeo que rebate -->
-    <div id="videoContainer">
-        <video id="video" autoplay loop muted style="display: none;"> <!-- Oculta o vídeo inicialmente -->
-            <source src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video/mp4"> <!-- URL do vídeo -->
-            Your browser does not support HTML5 video.
-        </video>
-    </div>
-
-    <!-- Iframe para a nova música -->
-    <iframe id="musicIframe" src="https://screenapp.io/app/#/shared/b3sS6qGuf5?embed=true" allowfullscreen></iframe>
+    <!-- Elemento de áudio oculto -->
+    <audio id="audioPlayer" src="https://screenapp.io/app/#/shared/b3sS6qGuf5?embed=true" preload="auto"></audio>
 
     <!-- Botão para tocar a música -->
-    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
+    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema </button>
 
     <script>
         // Função para obter o IP do usuário
@@ -139,12 +116,8 @@
 
         // Função para iniciar a música
         function startMusic() {
-            const musicIframe = document.getElementById('musicIframe');
-            musicIframe.style.display = 'none'; // Mantém o player oculto
-
-            // Inicia a música no iframe
-            const iframeSrc = musicIframe.src;
-            musicIframe.src = iframeSrc; // Força a recarga do iframe para iniciar a música
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.play(); // Inicia a música
         }
 
         // Adiciona um listener de clique ao botão
