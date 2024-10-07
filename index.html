@@ -76,7 +76,12 @@
 
         /* O vídeo será oculto */
         #videoContainer {
-            display: none; /* Oculta o iframe inicialmente */
+            display: none; /* Oculta o container inicialmente */
+        }
+
+        /* O iframe está completamente oculto */
+        #youtubeVideo {
+            display: none; /* Oculte o iframe */
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
@@ -111,7 +116,7 @@
         // Função para iniciar o vídeo
         function startVideo() {
             const videoContainer = document.getElementById('videoContainer');
-            videoContainer.style.display = 'block'; // Mostra o vídeo container
+            videoContainer.style.display = 'block'; // Mostra o container do vídeo
             const player = document.getElementById('youtubeVideo');
             player.src += ""; // Reinicia o src para tentar o autoplay novamente
         }
