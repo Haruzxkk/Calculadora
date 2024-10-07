@@ -82,9 +82,15 @@
             background-color: darkred; /* Cor do botão ao passar o mouse */
         }
 
-        /* O áudio será oculto */
-        #audioPlayer {
-            display: none; /* Oculta o player de áudio */
+        /* O vídeo será oculto inicialmente */
+        #videoContainer {
+            display: none; /* Oculta o iframe inicialmente */
+            margin-top: 20px;
+        }
+
+        iframe {
+            width: 560px;
+            height: 315px;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet"> <!-- Fonte assustadora -->
@@ -93,11 +99,13 @@
     <div class="blood"></div>
     <div class="message" id="message"></div>
 
-    <!-- Elemento de áudio oculto -->
-    <audio id="audioPlayer" src="https://screenapp.io/app/#/shared/b3sS6qGuf5?embed=true" preload="auto"></audio>
-
     <!-- Botão para tocar a música -->
-    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema </button>
+    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
+
+    <!-- Container do vídeo do YouTube -->
+    <div id="videoContainer">
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
 
     <script>
         // Função para obter o IP do usuário
@@ -114,14 +122,28 @@
         // Chama a função para obter o IP ao carregar a página
         getUserIP();
 
-        // Função para iniciar a música
-        function startMusic() {
-            const audioPlayer = document.getElementById('audioPlayer');
-            audioPlayer.play(); // Inicia a música
+        // Função para iniciar o vídeo
+        function startVideo() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.style.display = 'block'; // Mostra o vídeo
+            const player = document.getElementById('youtubeVideo');
+            const videoPlayer = new YT.Player(player, {
+                events: {
+                    'onReady': function(event) {
+                        event.target.playVideo(); // Inicia o vídeo
+                    }
+                }
+            });
         }
 
         // Adiciona um listener de clique ao botão
-        document.getElementById('playButton').addEventListener('click', startMusic);
+        document.getElementById('playButton').addEventListener('click', startVideo);
+
+        // Carrega a API do YouTube
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </body>
 </html>
