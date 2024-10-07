@@ -120,7 +120,8 @@
             const videoContainer = document.getElementById('videoContainer');
             videoContainer.style.display = 'block'; // Mostra o vídeo container
             const player = document.getElementById('youtubeVideo');
-            player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); // Envia mensagem para iniciar o vídeo
+            player.src += "&autoplay=1"; // Adiciona autoplay ao src existente
+            videoContainer.style.display = 'block'; // Certifique-se de que o vídeo container é visível
         }
 
         // Adiciona um listener de clique ao botão
