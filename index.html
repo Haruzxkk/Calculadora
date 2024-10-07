@@ -90,7 +90,7 @@
 
     <!-- Container do vídeo do YouTube -->
     <div id="videoContainer">
-        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/b2pD0B9Rfps?enablejsapi=1&autoplay=1&loop=1&playlist=b2pD0B9Rfps" frameborder="0" allow="autoplay" allowfullscreen></iframe>
     </div>
 
     <script>
@@ -113,7 +113,7 @@
             const videoContainer = document.getElementById('videoContainer');
             videoContainer.style.display = 'block'; // Mostra o vídeo container
             const player = document.getElementById('youtubeVideo');
-            player.src += "?autoplay=1&loop=1&playlist=b2pD0B9Rfps"; // Adiciona autoplay e loop ao src existente
+            player.src += ""; // Reinicia o src para tentar o autoplay novamente
         }
 
         // Adiciona um listener de clique ao botão
